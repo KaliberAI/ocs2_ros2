@@ -1,0 +1,230 @@
+; robot model meta-information
+model_information {
+  manipulatorModelType     0      // 0: Default-arm, 1: Wheel-based manipulator, 2: Floating-arm manipulator
+  
+  ; motion joints in the URDF to consider fixed
+  removeJoints {
+      [0] "fixed"
+      [1] "ee_arm"
+      [2] "gripper"
+      [3] "gripper_bar"
+      [4] "ee_bar"
+      [5] "ee_gripper"
+      [6] "left_finger"
+      [7] "right_finger"
+  }
+
+  ; base frame of the robot (from URDF)
+  baseFrame "vx300s/base_link"
+  ; end-effector frame of the robot (from URDF)
+  eeFrame "vx300s/ee_gripper_link"
+}
+
+model_settings
+{
+  usePreComputation               true
+  recompileLibraries              true
+}
+
+; DDP settings
+ddp
+{
+  algorithm                       SLQ
+
+  nThreads                        3
+  threadPriority                  50
+
+  maxNumIterations                1
+  minRelCost                      0.1
+  constraintTolerance             1e-3
+
+  displayInfo                     true
+  displayShortSummary             true
+  checkNumericalStability         false
+  debugPrintRollout               true
+  debugCaching                    false
+
+  AbsTolODE                       1e-5
+  RelTolODE                       1e-3
+  maxNumStepsPerSecond            100000
+  timeStep                        1e-3
+  backwardPassIntegratorType      ODE45
+
+  constraintPenaltyInitialValue   20.0
+  constraintPenaltyIncreaseRate   2.0
+
+  preComputeRiccatiTerms          true
+
+  useFeedbackPolicy               false
+
+  strategy                        LINE_SEARCH
+  lineSearch
+  {
+    minStepLength                 1e-2
+    maxStepLength                 1.0
+    hessianCorrectionStrategy     DIAGONAL_SHIFT
+    hessianCorrectionMultiple     1e-3
+  }
+}
+
+; Rollout settings
+rollout
+{
+  AbsTolODE                       1e-5
+  RelTolODE                       1e-3
+  timeStep                        1e-2
+  integratorType                  ODE45
+  maxNumStepsPerSecond            100000
+  checkNumericalStability         false
+}
+
+; MPC settings
+mpc
+{
+  timeHorizon                     2.0   ; [s]
+  solutionTimeWindow              0.2   ; [s]
+  coldStart                       false
+  debugPrint                      true
+  mpcDesiredFrequency             100   ; [Hz]
+  mrtDesiredFrequency             400   ; [Hz]
+}
+
+; initial state
+initialState
+{
+  ; initial state for the different types of arm base DOFs
+  base
+  {
+    defaultManipulator
+    {
+    }
+
+  }
+
+  ; initial state for the arm DOFs
+  arm
+  {
+    (0,0) 0.0  ; waist
+    (1,0) -0.5 ; shoulder
+    (2,0) 0.5  ; elbow
+    (3,0) 0.0  ; forearm_roll
+    (4,0) -0.3 ; wrist_angle
+    (5,0) 0.0  ; wrist_rotate
+  }
+
+}
+
+inputCost
+{
+  ; control weight matrix
+  R
+  {
+    ; input costs for the different types of arm base DOFs
+    base
+    {
+      defaultManipulator
+      {
+      }
+    }
+
+    ; input costs for the arm DOFs
+    arm
+    {
+      scaling 1e-2
+
+      (0,0)  1.0  ; waist velocity
+      (1,1)  1.0  ; shoulder velocity
+      (2,2)  1.0  ; elbow velocity
+      (3,3)  1.0  ; forearm_roll velocity
+      (4,4)  1.0  ; wrist_angle velocity
+      (5,5)  1.0  ; wrist_rotate velocity
+    }
+  }
+}
+
+endEffector
+{
+  ; end effector quadratic penalty scaling
+  muPosition      10.0
+  muOrientation    5.0
+}
+
+finalEndEffector
+{
+  muPosition      10.0
+  muOrientation    5.0
+}
+
+selfCollision
+{ 
+  ; activate self-collision constraint
+  activate  true
+
+  ; TODO: Replace the collision meshes of the arm with primitive shapes.
+}
+
+; Only applied for arm joints: limits parsed from URDF
+jointPositionLimits
+{
+  ; activate constraint
+  activate  true
+
+  ; relaxed log barrier mu
+  mu      0.01
+
+  ; relaxed log barrier delta
+  delta   1e-3
+}
+
+jointVelocityLimits
+{
+  ; relaxed log barrier mu
+  mu      0.01
+
+  ; relaxed log barrier delta
+  delta   1e-3
+
+  lowerBound
+  {
+    ; velocity limits for the different types of arm base DOFs
+    base
+    {
+      defaultManipulator
+      {
+      }
+    }
+
+    ; velocity limits for the arm DOFs
+    arm
+    {
+      (0,0)  -0.1    ; waist [rad/s]
+      (1,0)  -0.1	   ; shoulder [rad/s]
+      (2,0)  -0.1	   ; elbow [rad/s]
+      (3,0)  -0.1	   ; forearm_roll [rad/s]
+      (4,0)  -0.1	   ; wrist_angle [rad/s]
+      (5,0)  -0.1	   ; wrist_rotate [rad/s]
+    }
+  }
+
+  upperBound
+  {
+    ; velocity limits for the different types of arm base DOFs
+    base
+    {
+      defaultManipulator
+      {
+      }
+    }
+
+    ; velocity limits for the arm DOFs
+    arm
+    {
+      (0,0)  0.1     ; waist [rad/s]
+      (1,0)  0.1	   ; shoulder [rad/s]
+      (2,0)  0.1	   ; elbow [rad/s]
+      (3,0)  0.1	   ; forearm_roll [rad/s]
+      (4,0)  0.1	   ; wrist_angle [rad/s]
+      (5,0)  0.1	   ; wrist_rotate [rad/s]
+    }
+  }
+}
