@@ -54,6 +54,31 @@ add_executable(mobile_manipulator_target src/MobileManipulatorTarget.cpp)
 target_link_libraries(mobile_manipulator_target ${PROJECT_NAME})
 ament_target_dependencies(mobile_manipulator_target ${dependencies})
 
+# DistanceVisualization node
+add_executable(mobile_manipulator_distance_visualization src/MobileManipulatorDistanceVisualization.cpp)
+target_link_libraries(mobile_manipulator_distance_visualization ${PROJECT_NAME})
+ament_target_dependencies(mobile_manipulator_distance_visualization ${dependencies})
+
+# MRT node
+add_executable(mrt_node src/mrt_node.cpp)
+target_link_libraries(mrt_node ${PROJECT_NAME})
+ament_target_dependencies(mrt_node ${dependencies})
+
+# MRT node in simulation
+# add_executable(mrt_node_sim src/mrt_node_sim.cpp)
+# target_link_libraries(mrt_node_sim ${PROJECT_NAME})
+# ament_target_dependencies(mrt_node_sim ${dependencies})
+
+# Open-loop MRT node
+add_executable(open_loop_mrt_node src/open_loop_mrt_node.cpp)
+target_link_libraries(open_loop_mrt_node ${PROJECT_NAME})
+ament_target_dependencies(open_loop_mrt_node ${dependencies})
+
+# Open-loop MRT node torque
+add_executable(open_loop_mrt_node_torque src/open_loop_mrt_node_torque.cpp)
+target_link_libraries(open_loop_mrt_node_torque ${PROJECT_NAME})
+ament_target_dependencies(open_loop_mrt_node_torque ${dependencies})
+
 #############
 ## Install ##
 #############
