@@ -32,6 +32,11 @@ def generate_launch_description():
             default_value='true'
         ),
         DeclareLaunchArgument(
+            name='dummy',
+            default_value='true',
+            description='Whether to enable dummy mrt node'
+        ),
+        DeclareLaunchArgument(
             name='urdfFile',
             default_value=''
         ),
@@ -110,6 +115,7 @@ def generate_launch_description():
             name='mobile_manipulator_dummy_mrt_node',
             prefix=prefix,
             output='screen',
+            condition=IfCondition(LaunchConfiguration("dummy")),
             parameters=[
                 {
                     'taskFile': LaunchConfiguration('taskFile')

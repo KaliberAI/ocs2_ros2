@@ -17,6 +17,11 @@ def generate_launch_description():
             default_value='false'
         ),
         launch.actions.DeclareLaunchArgument(
+            name='dummy',
+            default_value='true',
+            description='Whether to enable dummy mrt node'
+        ),
+        launch.actions.DeclareLaunchArgument(
             name='urdfFile',
             default_value=get_package_share_directory(
                 'ocs2_robotic_assets') + '/resources/mobile_manipulator/viper/urdf/vx300s.urdf'
@@ -40,6 +45,7 @@ def generate_launch_description():
                 'rviz': launch.substitutions.LaunchConfiguration('rviz'),
                 'debug': launch.substitutions.LaunchConfiguration('debug'),
                 'urdfFile': launch.substitutions.LaunchConfiguration('urdfFile'),
+                'dummy': launch.substitutions.LaunchConfiguration('dummy'),
                 'taskFile': launch.substitutions.LaunchConfiguration('taskFile'),
                 'libFolder': launch.substitutions.LaunchConfiguration('libFolder')
             }.items()
