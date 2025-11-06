@@ -4,12 +4,10 @@ import sys
 import launch
 import launch_ros.actions
 from ament_index_python.packages import get_package_share_directory
-import launch
-import os
-from ament_index_python.packages import get_package_share_directory
 from launch.conditions import IfCondition, UnlessCondition
 from launch.substitutions import LaunchConfiguration
 from launch import LaunchDescription
+from launch_ros.actions import Node
 
 
 def generate_launch_description():
@@ -47,6 +45,13 @@ def generate_launch_description():
         description='If true, only launch visualization without mobile manipulator'
     )
 
+    robot_state_publisher = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        output="screen",
+        arguments=[LaunchConfiguration("urdfFile")],
+    )
+
     mobile_manipulator = launch.actions.IncludeLaunchDescription(
         launch.launch_description_sources.PythonLaunchDescriptionSource(
             os.path.join(get_package_share_directory(
@@ -68,9 +73,7 @@ def generate_launch_description():
                 'ocs2_mobile_manipulator_ros'), 'launch/include/visualize.launch.py')
         ),
         launch_arguments={
-            'urdfFile': launch.substitutions.LaunchConfiguration('urdfFile'),
             'rviz': launch.substitutions.LaunchConfiguration('rviz'),
-            'test': 'true'
         }.items(),
         condition=IfCondition(LaunchConfiguration('visualize_only'))
     )
@@ -83,6 +86,7 @@ def generate_launch_description():
         taskFile,
         libFolder,
         visualize_only,
+        robot_state_publisher,
         mobile_manipulator,
         visualize
     ])

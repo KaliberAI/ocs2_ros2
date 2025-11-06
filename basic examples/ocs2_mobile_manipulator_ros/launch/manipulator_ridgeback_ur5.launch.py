@@ -4,6 +4,8 @@ import sys
 import launch
 import launch_ros.actions
 from ament_index_python.packages import get_package_share_directory
+from launch_ros.actions import Node
+from launch.substitutions import LaunchConfiguration
 
 
 def generate_launch_description():
@@ -30,6 +32,12 @@ def generate_launch_description():
             name='libFolder',
             default_value=get_package_share_directory(
                 'ocs2_mobile_manipulator') + '/auto_generated/ridgeback_ur5'
+        ),
+        Node(
+            package="robot_state_publisher",
+            executable="robot_state_publisher",
+            output="screen",
+            arguments=[LaunchConfiguration("urdfFile")],
         ),
         launch.actions.IncludeLaunchDescription(
             launch.launch_description_sources.PythonLaunchDescriptionSource(

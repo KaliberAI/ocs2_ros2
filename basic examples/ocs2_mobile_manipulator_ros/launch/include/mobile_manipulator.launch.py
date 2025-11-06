@@ -63,7 +63,6 @@ def generate_launch_description():
                     'ocs2_mobile_manipulator_ros'), 'launch/include/visualize.launch.py')
             ),
             launch_arguments={
-                'urdfFile': LaunchConfiguration('urdfFile'),
                 'rviz': LaunchConfiguration('rviz')
             }.items()
         ),
