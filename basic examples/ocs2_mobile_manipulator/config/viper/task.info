@@ -55,7 +55,7 @@ ddp
 
   preComputeRiccatiTerms          true
 
-  useFeedbackPolicy               false
+  useFeedbackPolicy               true
 
   strategy                        LINE_SEARCH
   lineSearch
@@ -85,8 +85,8 @@ mpc
   solutionTimeWindow              0.2   ; [s]
   coldStart                       false
   debugPrint                      true
-  mpcDesiredFrequency             100   ; [Hz]
-  mrtDesiredFrequency             400   ; [Hz]
+  mpcDesiredFrequency             30   ; [Hz]
+  mrtDesiredFrequency             30   ; [Hz]
 }
 
 ; initial state
@@ -197,12 +197,12 @@ jointVelocityLimits
     ; velocity limits for the arm DOFs
     arm
     {
-      (0,0)  -0.1    ; waist [rad/s]
-      (1,0)  -0.1	   ; shoulder [rad/s]
-      (2,0)  -0.1	   ; elbow [rad/s]
-      (3,0)  -0.1	   ; forearm_roll [rad/s]
-      (4,0)  -0.1	   ; wrist_angle [rad/s]
-      (5,0)  -0.1	   ; wrist_rotate [rad/s]
+      (0,0)  -1.0    ; waist [rad/s]
+      (1,0)  -1.0	   ; shoulder [rad/s]
+      (2,0)  -1.0	   ; elbow [rad/s]
+      (3,0)  -1.0	   ; forearm_roll [rad/s]
+      (4,0)  -1.0	   ; wrist_angle [rad/s]
+      (5,0)  -1.0	   ; wrist_rotate [rad/s]
     }
   }
 
@@ -219,12 +219,12 @@ jointVelocityLimits
     ; velocity limits for the arm DOFs
     arm
     {
-      (0,0)  0.1     ; waist [rad/s]
-      (1,0)  0.1	   ; shoulder [rad/s]
-      (2,0)  0.1	   ; elbow [rad/s]
-      (3,0)  0.1	   ; forearm_roll [rad/s]
-      (4,0)  0.1	   ; wrist_angle [rad/s]
-      (5,0)  0.1	   ; wrist_rotate [rad/s]
+      (0,0)  1.0     ; waist [rad/s]
+      (1,0)  1.0	   ; shoulder [rad/s]
+      (2,0)  1.0	   ; elbow [rad/s]
+      (3,0)  1.0	   ; forearm_roll [rad/s]
+      (4,0)  1.0	   ; wrist_angle [rad/s]
+      (5,0)  1.0	   ; wrist_rotate [rad/s]
     }
   }
 }
