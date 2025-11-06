@@ -12,6 +12,10 @@ set(dependencies
         robot_state_publisher
         ocs2_self_collision_visualization
         ocs2_mobile_manipulator
+        ocs2_ros_interfaces
+        control_msgs
+        trajectory_msgs
+        interbotix_xs_msgs
 )
 
 find_package(ament_cmake REQUIRED)
@@ -21,6 +25,10 @@ find_package(kdl_parser REQUIRED)
 find_package(robot_state_publisher REQUIRED)
 find_package(ocs2_self_collision_visualization REQUIRED)
 find_package(ocs2_mobile_manipulator REQUIRED)
+find_package(ocs2_ros_interfaces REQUIRED)
+find_package(control_msgs REQUIRED)
+find_package(trajectory_msgs REQUIRED)
+find_package(interbotix_xs_msgs REQUIRED)
 
 ###########
 ## Build ##
@@ -41,7 +49,7 @@ add_executable(mobile_manipulator_mpc_node src/MobileManipulatorMpcNode.cpp)
 target_link_libraries(mobile_manipulator_mpc_node ${PROJECT_NAME})
 ament_target_dependencies(mobile_manipulator_mpc_node ${dependencies})
 
-# Dummy node
+# Dummy MRT node
 add_executable(mobile_manipulator_dummy_mrt_node
         src/MobileManipulatorDummyMRT.cpp
         src/MobileManipulatorDummyVisualization.cpp
@@ -59,25 +67,13 @@ add_executable(mobile_manipulator_distance_visualization src/MobileManipulatorDi
 target_link_libraries(mobile_manipulator_distance_visualization ${PROJECT_NAME})
 ament_target_dependencies(mobile_manipulator_distance_visualization ${dependencies})
 
-# MRT node
-add_executable(mrt_node src/mrt_node.cpp)
-target_link_libraries(mrt_node ${PROJECT_NAME})
-ament_target_dependencies(mrt_node ${dependencies})
-
-# MRT node in simulation
-# add_executable(mrt_node_sim src/mrt_node_sim.cpp)
-# target_link_libraries(mrt_node_sim ${PROJECT_NAME})
-# ament_target_dependencies(mrt_node_sim ${dependencies})
-
-# Open-loop MRT node
-add_executable(open_loop_mrt_node src/open_loop_mrt_node.cpp)
-target_link_libraries(open_loop_mrt_node ${PROJECT_NAME})
-ament_target_dependencies(open_loop_mrt_node ${dependencies})
-
-# Open-loop MRT node torque
-add_executable(open_loop_mrt_node_torque src/open_loop_mrt_node_torque.cpp)
-target_link_libraries(open_loop_mrt_node_torque ${PROJECT_NAME})
-ament_target_dependencies(open_loop_mrt_node_torque ${dependencies})
+# Real robot MRT node using MRT_ROS_Interface
+add_executable(mobile_manipulator_mrt_node
+        src/MobileManipulatorMRT.cpp
+        src/MobileManipulatorDummyVisualization.cpp
+)
+target_link_libraries(mobile_manipulator_mrt_node ${PROJECT_NAME})
+ament_target_dependencies(mobile_manipulator_mrt_node ${dependencies})
 
 #############
 ## Install ##
@@ -88,6 +84,7 @@ install(
         TARGETS
         mobile_manipulator_mpc_node
         mobile_manipulator_dummy_mrt_node
+        mobile_manipulator_mrt_node
         mobile_manipulator_target
         DESTINATION lib/${PROJECT_NAME}
 )
