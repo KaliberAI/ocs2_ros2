@@ -133,6 +133,14 @@ interbotix_xs_msgs::msg::JointGroupCommand createCommandMessage(const vector_t& 
     size_t numJoints = jointNames_.size();
     command.cmd.resize(numJoints);
     
+    // Warn if dimensions don't match (but still try to use what we have)
+    if (mpcState.size() != numJoints) {
+        RCLCPP_WARN_THROTTLE(node_->get_logger(), *node_->get_clock(), 2000,
+                            "MPC state dimension (%zu) doesn't match number of joints (%zu). "
+                            "This may cause incorrect commands!",
+                            mpcState.size(), numJoints);
+    }
+    
     // Use MPC state trajectory position directly (no integration needed)
     // The MPC already computed the optimal position trajectory
     // Note: cmd is float32[], so we cast to float to match the message type
@@ -291,7 +299,10 @@ void controlLoop(MRT_ROS_Interface& mrt, MobileManipulatorInterface& interface) 
         vector_t mpcState, mpcInput;
         size_t mode;
         try {
-            mrt.evaluatePolicy(currentObservation.time, currentObservation.state,
+            // Evaluate at current time + dt to get the next desired state
+            // This prevents commanding the current state (which causes no movement)
+            scalar_t commandTime = currentObservation.time + dt;
+            mrt.evaluatePolicy(commandTime, currentObservation.state,
                               mpcState, mpcInput, mode);
             
             // Use MPC state trajectory position directly
@@ -308,9 +319,11 @@ void controlLoop(MRT_ROS_Interface& mrt, MobileManipulatorInterface& interface) 
             vector_t stateError = currentObservation.state - mpcState;
             double maxError = stateError.cwiseAbs().maxCoeff();
             RCLCPP_DEBUG_THROTTLE(node_->get_logger(), *node_->get_clock(), 1000,
-                                  "Time: %.3f, Max tracking error: %.4f rad",
-                                  currentObservation.time, maxError);
-        } catch (const std::exception& e) {
+                        "Time: %.3f, Command time: %.3f, Max tracking error: %.4f rad, "
+                        "MPC state size: %zu, Joints: %zu",
+                        currentObservation.time, commandTime, maxError,
+                        mpcState.size(), jointNames_.size());
+            } catch (const std::exception& e) {
             RCLCPP_WARN_STREAM(node_->get_logger(),
                               "Error evaluating policy: " << e.what());
         }
