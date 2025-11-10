@@ -69,6 +69,16 @@ def generate_launch_description():
             default_value='false',
             description='Whether to enable automatic marker position updates'
         ),
+        DeclareLaunchArgument(
+            name='enableTfPosition',
+            default_value='false',
+            description='Whether to enable tf position updates'
+        ),
+        DeclareLaunchArgument(
+            name='tfTargetFrame',
+            default_value='track_target',
+            description='The frame to use for tf target frame'
+        ),
         Node(
             package='ocs2_mobile_manipulator_ros',
             executable='mobile_manipulator_mpc',
@@ -164,6 +174,12 @@ def generate_launch_description():
                 },
                 {
                     'enableAutoPosition': LaunchConfiguration('enableAutoPosition')
+                },
+                {
+                    'enableTfPosition': LaunchConfiguration('enableTfPosition')
+                },
+                {
+                    'tfTargetFrame': LaunchConfiguration('tfTargetFrame')
                 },
             ],
             output='screen',

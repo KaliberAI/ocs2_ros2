@@ -14,6 +14,7 @@ set(dependencies
         visualization_msgs
         geometry_msgs
         interactive_markers
+        tf2_ros
 )
 
 find_package(ament_cmake REQUIRED)
@@ -31,6 +32,7 @@ add_library(${PROJECT_NAME}
         src/command/UnifiedTargetTrajectoriesInteractiveMarker.cpp
         src/command/JoystickMarkerWrapper.cpp
         src/command/MarkerAutoPositionWrapper.cpp
+        src/command/TfMarkerWrapper.cpp
         src/command/TargetTrajectoriesKeyboardPublisher.cpp
         src/common/RosMsgConversions.cpp
         src/common/RosMsgHelpers.cpp
