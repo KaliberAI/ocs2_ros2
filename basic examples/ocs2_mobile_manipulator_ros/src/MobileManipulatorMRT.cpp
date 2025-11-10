@@ -242,7 +242,7 @@ void controlLoop(MRT_ROS_Interface& mrt, MobileManipulatorInterface& interface) 
         initTarget.tail(4) << Eigen::Quaternion<scalar_t>(1, 0, 0, 0).coeffs();
     } else {
         initTarget.resize(7);
-        initTarget.head(3) << 0.5, 0, 0.5;
+        initTarget.head(3) << 0.3, 0, 0.3;
         initTarget.tail(4) << Eigen::Quaternion<scalar_t>(1, 0, 0, 0).coeffs();
     }
     const vector_t zeroInput =
