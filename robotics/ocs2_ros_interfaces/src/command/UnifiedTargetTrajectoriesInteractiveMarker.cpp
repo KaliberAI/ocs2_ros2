@@ -24,7 +24,7 @@ namespace ocs2
           continuousMode_(false),
           frameId_(std::move(frameId)),
           singleArmFunction_(std::move(goalPoseToTargetTrajectories)),
-          singleArmPosition_(0.0, 0.0, 1.0),
+          singleArmPosition_(0.3, 0.0, 0.3),
           singleArmOrientation_(1.0, 0.0, 0.0, 0.0), // Default active arm
           activeArm_(ArmType::LEFT)
     {
