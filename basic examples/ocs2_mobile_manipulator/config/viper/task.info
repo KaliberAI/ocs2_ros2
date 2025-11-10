@@ -85,8 +85,8 @@ mpc
   solutionTimeWindow              0.2   ; [s]
   coldStart                       false
   debugPrint                      true
-  mpcDesiredFrequency             30   ; [Hz]
-  mrtDesiredFrequency             30   ; [Hz]
+  mpcDesiredFrequency             10   ; [Hz]
+  mrtDesiredFrequency             10  ; [Hz]
 }
 
 ; initial state
