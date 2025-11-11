@@ -24,8 +24,8 @@ namespace ocs2
           continuousMode_(false),
           frameId_(std::move(frameId)),
           singleArmFunction_(std::move(goalPoseToTargetTrajectories)),
-          singleArmPosition_(0.3, 0.0, 0.3),
-          singleArmOrientation_(1.0, 0.0, 0.0, 0.0), // Default active arm
+          singleArmPosition_(0.15, 0.0, 0.4),
+          singleArmOrientation_(0.96, 0, 0.28, 0), // Default active arm
           activeArm_(ArmType::LEFT)
     {
         topicPrefix_ = topicPrefix;

@@ -100,15 +100,14 @@ initialState
     }
 
   }
-
   ; initial state for the arm DOFs
   arm
   {
     (0,0) 0.0  ; waist
-    (1,0) -0.5 ; shoulder
-    (2,0) 0.5  ; elbow
+    (1,0) -1.05 ; shoulder
+    (2,0) 0.35  ; elbow
     (3,0) 0.0  ; forearm_roll
-    (4,0) -0.3 ; wrist_angle
+    (4,0) 1.25 ; wrist_angle
     (5,0) 0.0  ; wrist_rotate
   }
 
@@ -197,12 +196,12 @@ jointVelocityLimits
     ; velocity limits for the arm DOFs
     arm
     {
-      (0,0)  -1.0    ; waist [rad/s]
-      (1,0)  -1.0	   ; shoulder [rad/s]
-      (2,0)  -1.0	   ; elbow [rad/s]
-      (3,0)  -1.0	   ; forearm_roll [rad/s]
-      (4,0)  -1.0	   ; wrist_angle [rad/s]
-      (5,0)  -1.0	   ; wrist_rotate [rad/s]
+      (0,0)  -0.3    ; waist [rad/s]
+      (1,0)  -0.3	   ; shoulder [rad/s]
+      (2,0)  -0.3	   ; elbow [rad/s]
+      (3,0)  -0.3	   ; forearm_roll [rad/s]
+      (4,0)  -0.3	   ; wrist_angle [rad/s]
+      (5,0)  -0.3	   ; wrist_rotate [rad/s]
     }
   }
 
@@ -219,12 +218,12 @@ jointVelocityLimits
     ; velocity limits for the arm DOFs
     arm
     {
-      (0,0)  1.0     ; waist [rad/s]
-      (1,0)  1.0	   ; shoulder [rad/s]
-      (2,0)  1.0	   ; elbow [rad/s]
-      (3,0)  1.0	   ; forearm_roll [rad/s]
-      (4,0)  1.0	   ; wrist_angle [rad/s]
-      (5,0)  1.0	   ; wrist_rotate [rad/s]
+      (0,0)  0.3     ; waist [rad/s]
+      (1,0)  0.3	   ; shoulder [rad/s]
+      (2,0)  0.3	   ; elbow [rad/s]
+      (3,0)  0.3	   ; forearm_roll [rad/s]
+      (4,0)  0.3	   ; wrist_angle [rad/s]
+      (5,0)  0.3	   ; wrist_rotate [rad/s]
     }
   }
 }
