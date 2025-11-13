@@ -49,7 +49,10 @@ namespace ocs2
         UnifiedTargetTrajectoriesInteractiveMarker(
             rclcpp::Node::SharedPtr node, const std::string& topicPrefix,
             SingleArmGoalPoseToTargetTrajectories goalPoseToTargetTrajectories,
+            const Eigen::Vector3d& singleArmPosition,
+            const Eigen::Quaterniond& singleArmOrientation,
             double publishRate = 10.0,
+            bool continuousMode = false,
             std::string frameId = "world");
 
         /**

@@ -176,7 +176,15 @@ int main(int argc, char* argv[])
 
     // Create single arm interactive marker
     RCLCPP_INFO(node->get_logger(), "Single arm mode enabled");
-    UnifiedTargetTrajectoriesInteractiveMarker targetPoseCommand(node, robotName, &goalPoseToTargetTrajectories, 10.0, markerFrame);
+    // single arm mode
+    UnifiedTargetTrajectoriesInteractiveMarker targetPoseCommand(
+        node, robotName, &goalPoseToTargetTrajectories,
+        Eigen::Vector3d(0.15, 0.0, 0.4), // singleArmPosition
+        Eigen::Quaterniond(0.96, 0, 0.28, 0), // singleArmOrientation
+        0.25, // publishRate
+        false,  // continuousMode
+        markerFrame // frameId
+    );
 
     if (enableJoystick)
     {

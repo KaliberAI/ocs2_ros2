@@ -17,15 +17,19 @@ namespace ocs2
     UnifiedTargetTrajectoriesInteractiveMarker::UnifiedTargetTrajectoriesInteractiveMarker(
         rclcpp::Node::SharedPtr node, const std::string& topicPrefix,
         SingleArmGoalPoseToTargetTrajectories goalPoseToTargetTrajectories,
-        const double publishRate, std::string  frameId)
+        const Eigen::Vector3d& singleArmPosition,
+        const Eigen::Quaterniond& singleArmOrientation,
+        double publishRate,
+        bool continuousMode,
+        std::string frameId)
         : node_(std::move(node)),
           mode_(Mode::SINGLE_ARM),
           publishRate_(publishRate),
-          continuousMode_(false),
+          continuousMode_(continuousMode),
           frameId_(std::move(frameId)),
           singleArmFunction_(std::move(goalPoseToTargetTrajectories)),
-          singleArmPosition_(0.15, 0.0, 0.4),
-          singleArmOrientation_(0.96, 0, 0.28, 0), // Default active arm
+          singleArmPosition_(singleArmPosition),
+          singleArmOrientation_(singleArmOrientation),
           activeArm_(ArmType::LEFT)
     {
         topicPrefix_ = topicPrefix;
