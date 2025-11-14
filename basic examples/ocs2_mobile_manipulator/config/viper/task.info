@@ -107,7 +107,7 @@ initialState
     (1,0) -1.05 ; shoulder
     (2,0) 0.35  ; elbow
     (3,0) 0.0  ; forearm_roll
-    (4,0) 1.25 ; wrist_angle
+    (4,0) 1.05 ; wrist_angle
     (5,0) 0.0  ; wrist_rotate
   }
 

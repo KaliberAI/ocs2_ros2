@@ -176,12 +176,12 @@ int main(int argc, char* argv[])
 
     // Create single arm interactive marker
     RCLCPP_INFO(node->get_logger(), "Single arm mode enabled");
-    // single arm mode
+    // Single arm mode
     UnifiedTargetTrajectoriesInteractiveMarker targetPoseCommand(
         node, robotName, &goalPoseToTargetTrajectories,
-        Eigen::Vector3d(0.15, 0.0, 0.4), // singleArmPosition
-        Eigen::Quaterniond(0.96, 0, 0.28, 0), // singleArmOrientation
-        0.25, // publishRate
+        Eigen::Vector3d(0.16, 0.0, 0.44), // singleArmPosition
+        Eigen::Quaterniond(0.98, 0, 0.19, 0), // singleArmOrientation
+        1.0, // publishRate
         false,  // continuousMode
         markerFrame // frameId
     );
@@ -207,9 +207,9 @@ int main(int argc, char* argv[])
     if (enableTfPosition)
     {
         RCLCPP_INFO(node->get_logger(), "Tf position wrapper enabled");
-        // Use tfTargetFrame as target frame, markerFrame as source frame, and 30.0 Hz update rate
+        // Update rate
         tfPositionWrapper = std::make_unique<TfMarkerWrapper>(
-            node, &targetPoseCommand, tfTargetFrame, markerFrame, 30.0);
+            node, &targetPoseCommand, tfTargetFrame, markerFrame, 1.0);
         tfPositionWrapper->enable();
     }
 
