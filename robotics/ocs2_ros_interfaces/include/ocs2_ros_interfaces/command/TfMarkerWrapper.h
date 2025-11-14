@@ -122,6 +122,13 @@ namespace ocs2 {
 
         // Timing control
         rclcpp::Time lastUpdateTime_;
+
+        // Transform caching and threshold checking
+        Eigen::Vector3d prevPosition_;
+        Eigen::Quaterniond prevOrientation_;
+        bool hasPrevTf_;
+        double positionThreshold_;
+        double orientationThreshold_;  // in radians
     };
 
 } // namespace ocs2

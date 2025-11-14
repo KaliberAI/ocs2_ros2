@@ -5,6 +5,7 @@
 #include <tf2/exceptions.h>
 #include <Eigen/Core>
 #include <Eigen/Geometry>
+#include <cmath>
 
 namespace ocs2
 {
@@ -32,7 +33,25 @@ namespace ocs2
             std::chrono::milliseconds(static_cast<int>(1000.0 / updateRate_)),
             timerCallback);
 
+        // Initialize transform caching
+        hasPrevTf_ = false;
+        prevPosition_ = Eigen::Vector3d::Zero();
+        prevOrientation_ = Eigen::Quaterniond::Identity();
+
+        // Get threshold parameters from ROS parameters (with defaults)
+        if (!node_->has_parameter("tf_marker.position_threshold")) {
+            node_->declare_parameter<double>("tf_marker.position_threshold", 0.03);  // 5cm default
+        }
+        positionThreshold_ = node_->get_parameter("tf_marker.position_threshold").as_double();
+
+        if (!node_->has_parameter("tf_marker.orientation_threshold")) {
+            node_->declare_parameter<double>("tf_marker.orientation_threshold", 0.5236);  // 30 degree in radians default
+        }
+        orientationThreshold_ = node_->get_parameter("tf_marker.orientation_threshold").as_double();
+        
         RCLCPP_INFO(node_->get_logger(), "🔗 TfMarkerWrapper created");
+        RCLCPP_INFO(node_->get_logger(), "🔗 Position threshold: %.4f m, Orientation threshold: %.4f rad (%.2f deg)",
+                    positionThreshold_, orientationThreshold_, orientationThreshold_ * 180.0 / M_PI);
         RCLCPP_INFO(node_->get_logger(), "🔗 Listening to TF: %s -> %s", sourceFrame_.c_str(), targetFrame_.c_str());
         RCLCPP_INFO(node_->get_logger(), "🔗 TF control is DISABLED by default. Call enable() to activate.");
     }
@@ -98,8 +117,44 @@ namespace ocs2
             orientation.w() = transformStamped.transform.rotation.w;
             orientation.normalize();
 
-            // Update marker pose
-            updateMarkerPose(position, orientation);
+            // Check if change passes threshold
+            bool shouldUpdate = false;
+            if (!hasPrevTf_)
+            {
+                // First update - always update
+                shouldUpdate = true;
+                hasPrevTf_ = true;
+            }
+            else
+            {
+                // Check position change
+                double positionChange = (position - prevPosition_).norm();
+                bool positionChanged = positionChange >= positionThreshold_;
+
+                // Check orientation change (angular difference in radians)
+                Eigen::Quaterniond orientationDiff = prevOrientation_.inverse() * orientation;
+                double orientationChange = 2.0 * std::acos(std::abs(orientationDiff.w()));
+                bool orientationChanged = orientationChange >= orientationThreshold_;
+
+                shouldUpdate = positionChanged || orientationChanged;
+
+                if (shouldUpdate)
+                {
+                    RCLCPP_DEBUG(node_->get_logger(), 
+                                "🔗 Transform change detected - Position: %.4f m (threshold: %.4f), Orientation: %.4f rad (threshold: %.4f)",
+                                positionChange, positionThreshold_, orientationChange, orientationThreshold_);
+                }
+            }
+
+            // Update marker pose only if threshold is passed
+            if (shouldUpdate)
+            {
+                updateMarkerPose(position, orientation);
+                
+                // Cache the current transform
+                prevPosition_ = position;
+                prevOrientation_ = orientation;
+            }
         }
         catch (tf2::TransformException& ex)
         {
