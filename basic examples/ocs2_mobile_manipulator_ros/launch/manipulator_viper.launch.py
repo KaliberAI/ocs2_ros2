@@ -71,7 +71,7 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             name='enableTfPosition',
-            default_value='false',
+            default_value='true',
             description='Whether to enable tf position updates'
         ),
         DeclareLaunchArgument(
